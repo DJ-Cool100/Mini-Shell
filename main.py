@@ -119,7 +119,6 @@ def exec_command(user_in):
                     with open(args[0], "r") as file:
                         for line in file:
                             print(line, end="")
-                            print("")
                 except FileNotFoundError:
                     print("File does not exist")
                 except PermissionError:
