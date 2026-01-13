@@ -2,6 +2,8 @@ import os
 
 
 # MINI SHELL PROGRAM
+#TEXT EDITOR IS WIP
+#NOT ALL FEATURES ARE FULLY IMPLEMENTED
 
 global isRunning
 isRunning = True
@@ -86,7 +88,7 @@ def exec_command(user_in):
 
     match command:
         case "help":
-            print("exit, ls, pwd, echo")
+            print("exit, ls, pwd, echo <args>, edit <file>, touch <file>, cd <absolute path>, cat <file>")
         case "exit":
             isRunning = False
         case "ls":
@@ -133,8 +135,3 @@ def exec_command(user_in):
 while isRunning != False:
     command = prompt()
     exec_command(command)
-
-
-
-
-
