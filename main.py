@@ -1,12 +1,45 @@
 import os
-
+import re
 
 # MINI SHELL PROGRAM
-#TEXT EDITOR IS WIP
-#NOT ALL FEATURES ARE FULLY IMPLEMENTED
+
 
 global isRunning
 isRunning = True
+
+RED    = "\033[31m"
+GREEN  = "\033[32m"
+BLUE   = "\033[34m"
+RESET  = "\033[0m"
+
+
+KEYWORDS = {"if", "else", "while", "return", "def"}
+COLORS = {
+    "keyword": "\033[34m",  # blue
+    "number": "\033[35m",  # magenta
+    "string": "\033[32m",  # green
+    "comment": "\033[90m",  # gray
+}
+
+TOKEN_REGEX = [
+    ("comment", r"#.*"),
+    ("string", r"\".*?\""),
+    ("number", r"\b\d+\b"),
+    ("keyword", r"\b(if|else|while|return|func)\b"),
+]
+
+
+def highlight_line(line):
+    for token_type, pattern in TOKEN_REGEX:
+        color = COLORS[token_type]
+
+        line = re.sub(
+            pattern,
+            lambda m: f"{color}{m.group(0)}{RESET}",
+            line
+        )
+    return line
+
 
 def text_edit(filename):
     buffer = []
@@ -65,11 +98,14 @@ def text_edit(filename):
 def prompt():
     return input(">>>")
 
+
 def get_command(user_in):
     return user_in.lower().split(" ")[0]
 
+
 def get_args(user_in):
     return user_in.split(" ")[1:]
+
 
 def open_file(filename):
     try:
@@ -81,6 +117,7 @@ def open_file(filename):
         print("Permission denied")
     except IsADirectoryError:
         print("That's a directory")
+
 
 def exec_command(user_in):
     global isRunning
@@ -113,6 +150,7 @@ def exec_command(user_in):
                 except PermissionError:
                     print("Permission denied")
         case "cat":
+
             args = get_args(user_in)
             if not args:
                 print("No arguments provided")
@@ -120,7 +158,7 @@ def exec_command(user_in):
                 try:
                     with open(args[0], "r") as file:
                         for line in file:
-                            print(line, end="")
+                            print(highlight_line(line), end="")
                 except FileNotFoundError:
                     print("File does not exist")
                 except PermissionError:
